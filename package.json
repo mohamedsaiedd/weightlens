@@ -11,7 +11,7 @@
     "package": "vsce package",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "publisher": "Mohamed Saied",
+  "publisher": "mohamedsaied",
   "keywords": [],
   "author": "",
   "license": "ISC",
