@@ -40,5 +40,3 @@ If you would like to contribute to WeightLens, please follow our [contribution g
 This extension is licensed under the [MIT License](LICENSE).
 
 ---
-
-Feel free to customize the content further based on your extension's specific features, commands, and details. Include any additional sections that might be relevant, such as troubleshooting, FAQs, or links to a contributing guide or issue tracker.
