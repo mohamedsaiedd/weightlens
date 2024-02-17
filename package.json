@@ -1,6 +1,6 @@
 {
   "name": "WeightLens",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "The CSS Specificity Analyzer is a Visual Studio Code extension that provides real-time analysis of CSS selector specificity within your stylesheets. It calculates specificity weights for each selector based on IDs, classes, and HTML elements, allowing you to better understand the hierarchy and priority of your styles. Key features include automatic specificity calculation, inline display of specificity weights, real-time updates, and support for IDs, classes, HTML elements, and attribute selectors.",
   "main": "extension.js",
   "engines": {

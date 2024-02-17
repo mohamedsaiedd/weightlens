@@ -15,20 +15,42 @@ function isKnownHtmlElement(part) {
 }
 
 function calculateSpecificity(selector) {
-    let idSelectors = (selector.match(/#/g) || []).length;
-    let classSelectors = (selector.match(/\./g) || []).length;
+    // Split the selector by commas
+    const selectorParts = selector.split(',');
 
-    // Extract parts between spaces to find HTML elements
-    let htmlElements = selector.split(/[.#\s]/).filter(part => part !== '');
-    let elementSelectors = htmlElements.reduce((count, part) => isKnownHtmlElement(part) ? count + 1 : count, 0);
+    // Calculate specificity for each part of the selector
+    const specificityWeights = selectorParts.map(part => {
+        let idSelectors = (part.match(/#/g) || []).length;
+        let classSelectors = (part.match(/\./g) || []).length;
 
-    // Calculate a single weight for each selector
-    return `(${idSelectors}-${classSelectors}-${elementSelectors})`;
+        // Extract parts between spaces to find HTML elements
+        let htmlElements = part.split(/[.#\s]/).filter(part => part !== '');
+
+        // Calculate the number of HTML elements
+        let elementSelectors = htmlElements.reduce((count, part) => {
+            if (isKnownHtmlElement(part)) {
+                count++;
+            } else if (part.includes('[') && part.includes(']')) {
+                // If the part contains square brackets, treat it as a type selector inside []
+                count++;
+            }
+            return count;
+        }, 0);
+        // Return the specificity weight for this part
+        return `(${idSelectors}-${classSelectors}-${elementSelectors})`;
+    });
+
+    // Join the results with commas
+    return specificityWeights.join(' , ');
 }
 
 function activate(context) {
     let inlineDecorationType = vscode.window.createTextEditorDecorationType({
-       
+        after: {
+            margin: '0 0 0 1em',
+            fontWeight: 'light',
+            color: '#8e8e8e74',
+        },
     });
 
     let activeEditor = vscode.window.activeTextEditor;
@@ -46,6 +68,12 @@ function activate(context) {
 
     vscode.window.onDidChangeTextEditorSelection(event => {
         if (activeEditor && event.textEditor === activeEditor) {
+            updateDecorations(activeEditor, inlineDecorationType);
+        }
+    });
+
+    vscode.workspace.onDidChangeTextDocument(event => {
+        if (activeEditor && event.document === activeEditor.document) {
             updateDecorations(activeEditor, inlineDecorationType);
         }
     });
@@ -92,9 +120,8 @@ function updateDecorations(editor, decorationType) {
                     after: {
                         margin: '0 0 0 1em',
                         fontWeight: 'light',
-                        contentText: ` Specificity Weight: ${specificity}`,
                         color: '#8e8e8e74',
-                        
+                        contentText: ` Specificity Weight: ${specificity}`,
                     },
                 },
             };
